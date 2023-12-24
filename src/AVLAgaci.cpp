@@ -33,8 +33,10 @@ void AVLAgaci::preOrder() {
     preOrder(kok);
     cout<<endl;
 }
-void AVLAgaci::postOrder() {
-	postOrder(kok,yaprak);
+Yigin AVLAgaci::postOrder() {
+    Yigin yigin;
+    postOrder(kok, yigin);
+    return yigin;
 }
 void AVLAgaci::inOrder() {
     inOrder(kok);
@@ -108,18 +110,15 @@ void AVLAgaci::preOrder(Dugum* aktif)
         preOrder(aktif->sag);
     }
 }
-void AVLAgaci::postOrder(Dugum* aktif,Yigin& yaprak) 
+void AVLAgaci::postOrder(Dugum* aktif, Yigin& yigin) 
 {
-	if(aktif)
-    {
-        postOrder(aktif->sol,yaprak);
-        postOrder(aktif->sag,yaprak);
+    if (aktif) {
+        postOrder(aktif->sol, yigin);
+        postOrder(aktif->sag, yigin);
         if(aktif->sol==0&&aktif->sag==0)
         {
-            yaprak.ekle(aktif->veri);
+            yigin.ekle(aktif->veri); // Düğümü yığına ekle
         }
-        else
-            yaprakharici.ekle(aktif->veri);
     }	
 }
 
@@ -191,7 +190,6 @@ Dugum* AVLAgaci::ekle(int veri,Dugum* aktifDugum)
                 aktifDugum =sagaDondur(aktifDugum);
             }
         }
-
     }
     return aktifDugum;
 }

@@ -1,31 +1,35 @@
-#include "Liste.hpp"
-#include<iomanip>
+#include "YListe.hpp"
 
-Liste::Liste()
-{
-    ilk=0;
+YListe::YListe(){
+    ilk = 0;
 }
-Liste::~Liste()
-{
-    LDugum* gec =ilk;
-    while(gec!=0)
+YListe::~YListe(){
+    YDugum* gec = ilk;
+    while(gec != 0)
     {
-        LDugum* silinecek = gec;
+        YDugum* silinecek = gec;
         gec=gec->sonraki;
 
         delete silinecek;
     }
 }
-void Liste::ekle(AVLAgaci agac)
+void YListe::tumElemanlariSil() {
+    while (ilk != nullptr) {
+        YDugum* eskiDugum = ilk;
+        ilk = ilk->sonraki;
+        delete eskiDugum;
+    }
+}
+void YListe::ekle(Yigin yigin)
 {
-    LDugum* yeniDugum = new LDugum(agac);
+    YDugum* yeniDugum = new YDugum(yigin);
     if(ilk==0)
     {
         ilk = yeniDugum;
     }
     else
     {
-        LDugum* gec = ilk;
+        YDugum* gec = ilk;
 
         while(gec->sonraki!=0)
         {
@@ -36,10 +40,11 @@ void Liste::ekle(AVLAgaci agac)
         yeniDugum->onceki = gec;
     }
 }
-int Liste::uzunluk()
+
+int YListe::uzunluk()
 {
     int uzunluk=0;
-    LDugum* gec = ilk;
+    YDugum* gec = ilk;
 
     while(gec!=0)
     {
@@ -49,13 +54,15 @@ int Liste::uzunluk()
 
     return uzunluk;
 }
-AVLAgaci Liste::ilkGetir()
+
+Yigin YListe::ilkGetir()
 {
     if(ilk!=0)
-        return ilk->agac;
+        return ilk->yigin;
     throw std::out_of_range("Liste::ilkGetir(): Liste bos Hatasi");
 }
-void Liste::cikar()
+
+void YListe::cikar()
 {
     if(ilk==0)      return;
 
@@ -66,7 +73,7 @@ void Liste::cikar()
     }
     else
     {
-        LDugum* gec = ilk;
+        YDugum* gec = ilk;
 
         while(gec->sonraki->sonraki!=0)
             gec= gec->sonraki;
@@ -74,18 +81,17 @@ void Liste::cikar()
         delete gec->sonraki;
         gec->sonraki = 0;
     }
-
-
 }
-void Liste::onuneEkle(int sira,AVLAgaci agac)
+
+void YListe::onuneEkle(int sira,Yigin yigin)
 {
-    LDugum* aktifDugum= dugumGetir(sira);
+    YDugum* aktifDugum= dugumGetir(sira);
 
     if(aktifDugum)
     {
-        LDugum* aktifsol = aktifDugum->onceki;
+        YDugum* aktifsol = aktifDugum->onceki;
 
-        LDugum* yeniDugum =new LDugum(agac);
+        YDugum* yeniDugum =new YDugum(yigin);
 
         aktifDugum->onceki = yeniDugum;
 
@@ -99,15 +105,16 @@ void Liste::onuneEkle(int sira,AVLAgaci agac)
 
     }
 }
-void Liste::cikar(int sira)
+
+void YListe::cikar(int sira)
 {
-    LDugum* silinecek= dugumGetir(sira);
+    YDugum* silinecek= dugumGetir(sira);
 
     if(silinecek)
     {
         
-        LDugum* silineceksol = silinecek->onceki;
-        LDugum* silineceksag = silinecek->sonraki;
+        YDugum* silineceksol = silinecek->onceki;
+        YDugum* silineceksag = silinecek->sonraki;
 
         if(silineceksag)
             silineceksag->onceki = silineceksol;
@@ -119,9 +126,10 @@ void Liste::cikar(int sira)
         delete silinecek;
     }
 }
-LDugum* Liste::dugumGetir(int sira)
+
+YDugum* YListe::dugumGetir(int sira)
 {
-    LDugum* gec = ilk;
+    YDugum* gec = ilk;
 
     if (sira < 0 || sira >= uzunluk()) {
             return nullptr;
@@ -138,15 +146,34 @@ LDugum* Liste::dugumGetir(int sira)
 
     return 0;
 }
-ostream& operator<<(ostream& os,Liste& liste)
+
+YListe& YListe::operator=(const YListe& other) {
+    
+    if (this != &other) {
+
+        while (ilk != nullptr) {
+            cikar();
+        }
+
+        YDugum* current = other.ilk;
+        while (current != nullptr) {
+            Yigin copiedyigin = current->yigin;
+            ekle(copiedyigin);
+            current = current->sonraki;
+        }
+    }
+    return *this;
+}
+
+ostream& operator<<(ostream& os,YListe& liste)
 {
     using namespace std;
 
-    LDugum* gec = liste.ilk;
+    YDugum* gec = liste.ilk;
 
     while(gec!=0)
     {
-        os<<gec->agac<<endl;
+        os<<gec->yigin<<endl;
         gec=gec->sonraki;
     }
 

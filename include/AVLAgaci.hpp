@@ -12,8 +12,6 @@ class AVLAgaci
 public:
 	AVLAgaci();
 	~AVLAgaci();
-	Yigin yaprak;
-	Yigin yaprakharici;
 	int sira;
 	int haricitoplam;
 	int asciideger;
@@ -26,7 +24,7 @@ public:
 	int ascii();
 	int toplam();
 	void preOrder();
-	void postOrder();
+	Yigin postOrder();
 	void inOrder();
 	void boslukBirak(int adet);
 private:
@@ -38,7 +36,7 @@ private:
 	int minDeger(Dugum* aktif);	
 	void levelOrder();
 	void preOrder(Dugum* aktif);
-	void postOrder(Dugum* index,Yigin& yigin);
+	void postOrder(Dugum* aktif, Yigin& yigin);
 	void inOrder(Dugum* index);
 	int yukseklik(Dugum* aktifDugum);
 	Dugum* ekle(int veri,Dugum* aktifDugum);

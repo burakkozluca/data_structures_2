@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "AVLAgaci.hpp"
 #include "Liste.hpp"
+#include "YListe.hpp"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ int main()
     return 1;
   }
     Liste liste;
+    YListe yliste;
     std::string satir;
     int sira = 1;
     while (std::getline(dosya, satir))
@@ -36,7 +38,7 @@ int main()
             continue;
           agac.ekle(sayi);
         }
-        agac.postOrder();
+        yliste.ekle(agac.postOrder());
         agac.haricitoplam = agac.toplam();
         agac.sira = sira; 
         agac.asciideger = agac.ascii();
@@ -44,64 +46,76 @@ int main()
         sira++;
     }
     sira = 0;
+
+    bool a = false;
     while(liste.uzunluk() >= 2)
     {
       int i = 0;
       int j = 0;
+      int k = 0;
       int min = INT_MAX;
       int max = INT_MIN;
+      
       if(sira % 2 == 0)
       {
-        while(liste.dugumGetir(i) != 0)
+        while(yliste.dugumGetir(i) != 0)
         {
-          if(liste.dugumGetir(i)->agac.yaprak.getir() != 0)
+          if(yliste.dugumGetir(i)->yigin.getir() != 0)
           {
-            if(liste.dugumGetir(i)->agac.yaprak.getir() < min)
-              min = liste.dugumGetir(i)->agac.yaprak.getir();
+            if(yliste.dugumGetir(i)->yigin.getir() < min){
+              min = yliste.dugumGetir(i)->yigin.getir();
+              k = i;
+            } 
             i++;
           }
         }
+        yliste.dugumGetir(k)->yigin.cikar();
         i = 0;
-        while(liste.dugumGetir(i) != 0){
-          liste.dugumGetir(i)->agac.yaprak.sil(min);
-          i++;
-        }
+        k = 0;
       }
       else
       {
-        while(liste.dugumGetir(i) != 0)
+        while(yliste.dugumGetir(i) != 0)
         {
-          if(liste.dugumGetir(i)->agac.yaprak.getir() != 0)
+          if(yliste.dugumGetir(i)->yigin.getir() != 0)
           {
-            if(liste.dugumGetir(i)->agac.yaprak.getir() > max)
-              max = liste.dugumGetir(i)->agac.yaprak.getir();
+            if(yliste.dugumGetir(i)->yigin.getir() > max){
+              max = yliste.dugumGetir(i)->yigin.getir();
+              k = i;
+            }
             i++;
           }
         }
         i = 0;
-        while(liste.dugumGetir(i) != 0){
-          liste.dugumGetir(i)->agac.yaprak.sil(max);
-          i++;
-        }
+        yliste.dugumGetir(k)->yigin.cikar();
+        k=0;
       }
       //eğerki silerken yığınlarda aynı sayi varsa ilk oluşturulan yığındakşini sil
-      while(liste.dugumGetir(j) != 0)
+      while(yliste.dugumGetir(j) != 0)
       {
-        if(liste.dugumGetir(j)->agac.yaprak.getir() == 0)
+        if(yliste.dugumGetir(j)->yigin.getir() == 0)
         {
+          liste.cikar(j);
+          yliste.tumElemanlariSil();
           for(int i = 0; i < liste.uzunluk(); i++)
           {
             cout << (char)liste.dugumGetir(i)->agac.asciideger;
+            yliste.ekle(liste.dugumGetir(i)->agac.postOrder());
           }
           cout << "\033[2J\033[H";
-          liste.cikar(j);
+          a = true;
+
           if(liste.uzunluk() == 1)
             break;
           j--;
         }
         j++;
       }
-      sira++;
+      if(a)
+        sira = 0;
+      else
+        sira++;
+      a = false;
     }
     cout << endl;
     cout << "=============================" << endl;
